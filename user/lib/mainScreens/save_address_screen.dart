@@ -129,14 +129,14 @@ class _SaveAddressScreenState extends State<SaveAddressScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          if (formKey.currentState!.validate()) {
-            if (position == null) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Please get your location first")),
-              );
-              return;
-            }
+          if (position == null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Please get your location first")),
+            );
+            return;
+          }
 
+          if (formKey.currentState!.validate()) {
             String? uid = sharedPreferences!.getString("uid");
 
             // Debug: Check if UID exists
@@ -163,7 +163,7 @@ class _SaveAddressScreenState extends State<SaveAddressScreen> {
             FirebaseFirestore.instance
                 .collection("users")
                 .doc(uid)
-                .collection("userAddress")
+                .collection("addresses")
                 .doc(DateTime.now().millisecondsSinceEpoch.toString())
                 .set(model)
                 .then((value) {

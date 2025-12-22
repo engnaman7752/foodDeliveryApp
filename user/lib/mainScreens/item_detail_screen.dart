@@ -74,12 +74,10 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
             child: InkWell(
               onTap: () {
                 int itemCounter = int.parse(counterTextEditingController.text);
+                print(
+                    "DEBUG: Item Detail Screen - itemCounter = $itemCounter, itemId = ${widget.model!.itemId}");
 
-                List<String> seprateItemIdsList = separateItemIds();
-
-                seprateItemIdsList.contains(widget.model!.itemId)
-                    ? Fluttertoast.showToast(msg: "Item is already in cart")
-                    : addItemToCart(widget.model!.itemId, context, itemCounter);
+                addItemToCart(widget.model!.itemId, context, itemCounter);
               },
               child: Container(
                 decoration: const BoxDecoration(

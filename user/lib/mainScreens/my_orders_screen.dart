@@ -26,48 +26,119 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
               .collection("users")
               .doc(sharedPreferences?.getString("uid"))
               .collection("orders")
-              .where("status", isEqualTo: "normal")
               .orderBy("orderTime", descending: true)
               .snapshots(),
           builder: (c, snapshot) {
-            return snapshot.hasData
-                ? ListView.builder(
-                    itemCount: snapshot.data?.docs.length,
-                    itemBuilder: (c, index) {
-                      return FutureBuilder<QuerySnapshot>(
-                        future: FirebaseFirestore.instance
-                            .collection("items")
-                            .where("itemId",
-                                whereIn: separateOrderItemIds(
-                                    (snapshot.data?.docs[index].data()
-                                        as Map<String, dynamic>)["productIds"]))
-                            .where("orderedBy",
-                                whereIn: (snapshot.data?.docs[index].data()
-                                    as Map<String, dynamic>)["uid"])
-                            .orderBy("publishedDate", descending: true)
-                            .get(),
-                        builder: (c, snap) {
-                          return snap.hasData
-                              ? OrderCard(
-                                  itemCount: snap.data?.docs.length,
-                                  data: snap.data?.docs,
-                                  orderId: snapshot.data?.docs[index].id,
-                                  seperateQuantitiesList:
-                                      separateOrderItemQuantities(
-                                          (snapshot.data?.docs[index].data()
-                                                  as Map<String, dynamic>)[
-                                              "productIds"]),
-                                )
-                              : Center(
-                                  child: circularProgress(),
-                                );
-                        },
-                      );
-                    },
-                  )
-                : Center(
-                    child: circularProgress(),
-                  );
+            if (!snapshot.hasData) {
+              return Center(child: circularProgress());
+            }
+
+            if (snapshot.data!.docs.isEmpty) {
+              return Center(
+                child: Text(
+                  "No orders yet",
+                  style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                ),
+              );
+            }
+
+            return ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (c, index) {
+                var orderData =
+                    snapshot.data!.docs[index].data() as Map<String, dynamic>;
+
+                return Card(
+                  margin: const EdgeInsets.all(8),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Order ID
+                        Text(
+                          "Order #${snapshot.data!.docs[index].id}",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+
+                        // Total Amount
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text("Total Amount:"),
+                            Text(
+                              "₹${(orderData['totolAmmount'] ?? 0).toString()}",
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.red,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+
+                        // Item Count
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text("Items:"),
+                            Text(
+                              "${((orderData['productIds'] as List?)?.length ?? 0) - 1}",
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+
+                        // Payment Method
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text("Payment:"),
+                            Text(
+                              orderData['paymentDetails'] ?? "Cash on Delivery",
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+
+                        // Status
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text("Status:"),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: Colors.green[100],
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                orderData['status'] ?? "normal",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.green[800],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
           },
         ),
       ),

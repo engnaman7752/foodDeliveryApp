@@ -64,7 +64,7 @@ class _AddressScreenState extends State<AddressScreen> {
                 stream: FirebaseFirestore.instance
                     .collection("users")
                     .doc(sharedPreferences!.getString("uid"))
-                    .collection("userAddress")
+                    .collection("addresses")
                     .snapshots(),
                 builder: (context, snapshot) {
                   return !snapshot.hasData

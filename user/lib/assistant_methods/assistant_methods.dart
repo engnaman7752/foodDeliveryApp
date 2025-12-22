@@ -24,8 +24,18 @@ separateOrderItemIds(orderId) {
 
 separateItemIds() {
   List<String> separateItemIdsList = [], defaultItemList = [];
-  int i = 0;
-  defaultItemList = sharedPreferences!.getStringList("userCart")!;
+  int i = 1; // Skip the first "garbageValue" item
+
+  List<String>? cartItems = sharedPreferences!.getStringList("userCart");
+
+  if (cartItems == null || cartItems.isEmpty) {
+    print("DEBUG: userCart is null or empty");
+    return separateItemIdsList;
+  }
+
+  defaultItemList = cartItems;
+
+  print("DEBUG: userCart = $defaultItemList");
 
   for (i; i < defaultItemList.length; i++) {
     String item = defaultItemList[i].toString();
@@ -35,13 +45,34 @@ separateItemIds() {
     separateItemIdsList.add(getItemId);
   }
 
+  print("DEBUG: separateItemIds = $separateItemIdsList");
+
   return separateItemIdsList;
 }
 
 addItemToCart(String? foodItemId, BuildContext context, int itemCounter) {
   List<String>? tempList = sharedPreferences!.getStringList("userCart");
-  // foodItemId = 'garbadgevalue';
-  tempList!.add("${foodItemId!}:$itemCounter"); //1210259022: 2
+
+  // Check if item already exists in cart and update quantity instead of adding duplicate
+  String newItem = "${foodItemId!}:$itemCounter";
+  bool itemExists = false;
+
+  for (int i = 1; i < tempList!.length; i++) {
+    String existingItem = tempList[i];
+    String existingItemId = existingItem.split(":")[0];
+
+    if (existingItemId == foodItemId) {
+      tempList[i] = newItem;
+      itemExists = true;
+      break;
+    }
+  }
+
+  if (!itemExists) {
+    tempList.add(newItem);
+  }
+
+  print("DEBUG: Adding to cart. New cart = $tempList");
 
   FirebaseFirestore.instance
       .collection("users")
@@ -49,14 +80,18 @@ addItemToCart(String? foodItemId, BuildContext context, int itemCounter) {
       .update({
     "userCart": tempList,
   }).then((value) {
-    Fluttertoast.showToast(msg: "Item Added Successfully. ");
+    String message =
+        itemExists ? "Quantity Updated!" : "Item Added Successfully.";
+    Fluttertoast.showToast(msg: message);
 
     sharedPreferences!.setStringList("userCart", tempList);
 
     //update the page
-
     Provider.of<CartItemCounter>(context, listen: false)
         .displayCartListItemsNumber();
+  }).catchError((error) {
+    print("DEBUG: Error adding to cart: $error");
+    Fluttertoast.showToast(msg: "Error adding item to cart: $error");
   });
 }
 
@@ -111,4 +146,25 @@ clearCartNow(context) {
     Provider.of<CartItemCounter>(context, listen: false)
         .displayCartListItemsNumber();
   });
+}
+
+// Sync cart from Firestore to SharedPreferences
+syncCartFromFirestore() async {
+  try {
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(firebaseAuth.currentUser!.uid)
+        .get();
+
+    if (userDoc.exists) {
+      List<String>? firestoreCart = List<String>.from(
+          (userDoc.data() as Map<String, dynamic>)["userCart"] ??
+              ['garbageValue']);
+
+      print("DEBUG: Syncing cart from Firestore: $firestoreCart");
+      sharedPreferences!.setStringList("userCart", firestoreCart);
+    }
+  } catch (e) {
+    print("DEBUG: Error syncing cart: $e");
+  }
 }

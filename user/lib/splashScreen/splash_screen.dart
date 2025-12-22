@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:user_app/assistant_methods/assistant_methods.dart';
 import 'package:user_app/authentication/auth_screen.dart';
 import 'package:user_app/global/global.dart';
 import 'package:user_app/mainScreens/home_screen.dart';
@@ -16,6 +17,9 @@ class _MySplashScreenState extends State<MySplashScreen> {
   startTimer() {
     Timer(const Duration(seconds: 2), () async {
       if (firebaseAuth.currentUser != null) {
+        // Don't sync cart on startup - use local cache to avoid overwriting updates
+        // await syncCartFromFirestore();
+
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const HomeScreen()));
       } else {

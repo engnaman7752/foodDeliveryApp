@@ -71,7 +71,7 @@ class _PlacedOrderScreenState extends State<PlacedOrderScreen> {
     var options = {
       'key': 'rzp_test_Rue7Nc7QeqKlst', // Your Razorpay Key ID
       'amount': (widget.totolAmmount! * 100).toInt(), // Amount in paise
-      'name': 'I-Eat',
+      'name': 'Fresh Dine',
       'description': 'Order Payment',
       'prefill': {'contact': '9876543210', 'email': 'test@example.com'},
       'external': {

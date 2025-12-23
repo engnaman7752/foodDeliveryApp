@@ -38,7 +38,7 @@ class _MyAppbarState extends State<MyAppbar> {
           },
           icon: const Icon(Icons.arrow_back)),
       title: const Text(
-        "I-Eat",
+        "Fresh Dine",
         style: TextStyle(fontSize: 45, fontFamily: "Signatra"),
       ),
       centerTitle: true,

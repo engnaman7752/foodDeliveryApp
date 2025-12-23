@@ -45,7 +45,7 @@ class _MenusScreenState extends State<MenusScreen> {
             },
             icon: const Icon(Icons.arrow_back)),
         title: const Text(
-          "I-Eat",
+          "Fresh Dine",
           style: TextStyle(fontSize: 45, fontFamily: "Signatra"),
         ),
         centerTitle: true,
@@ -73,7 +73,8 @@ class _MenusScreenState extends State<MenusScreen> {
                       ),
                     )
                   : SliverGrid(
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 1,
                       ),
                       delegate: SliverChildBuilderDelegate(

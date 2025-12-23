@@ -1,10 +1,10 @@
-# I-Eat Food Delivery Platform 🚀🍕🍔🍰
+# Fresh Dine Food Delivery Platform 🚀🍕🍔🍰
 
 A **complete food delivery ecosystem** built with Flutter, featuring a user app, seller app, admin dashboard, and rider app. Multi-platform support with Firebase backend and Razorpay payment integration.
 
 ## 🎯 Overview
 
-I-Eat is a comprehensive food delivery platform where:
+Fresh Dine is a comprehensive food delivery platform where:
 - **Users** can browse restaurants, order food, and track deliveries
 - **Sellers** can manage menu items, fulfill orders, and track earnings
 - **Admins** can manage sellers, users, and monitor platform activities

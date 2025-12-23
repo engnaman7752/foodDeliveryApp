@@ -72,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         title: const Text(
-          "I-Eat",
+          "Fresh Dine",
           style: TextStyle(fontFamily: "Signatra", fontSize: 40),
         ),
         centerTitle: true,
@@ -131,34 +131,35 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           StreamBuilder<QuerySnapshot>(
-            stream:
-                FirebaseFirestore.instance.collection("sellers").snapshots(),
-            builder: (context, snapshot) {
-              return !snapshot.hasData
-                  ? SliverToBoxAdapter(
-                      child: Center(
-                        child: circularProgress(),
-                      ),
-                    )
-                  : SliverGrid(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          Sellers sModel = Sellers.fromJson(
-                              snapshot.data!.docs[index].data()
-                                  as Map<String, dynamic>);
+              stream:
+                  FirebaseFirestore.instance.collection("sellers").snapshots(),
+              builder: (context, snapshot) {
+                return !snapshot.hasData
+                    ? SliverToBoxAdapter(
+                        child: Center(
+                          child: circularProgress(),
+                        ),
+                      )
+                    : SliverGrid(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            Sellers sModel = Sellers.fromJson(
+                                snapshot.data!.docs[index].data()
+                                    as Map<String, dynamic>);
 
-                          return SellersDesignWidget(
-                            model: sModel,
-                            context: context,
-                          );
-                        },
-                        childCount: snapshot.data!.docs.length,
-                      ),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 1,
-                      ),
-                    );
-            }),
+                            return SellersDesignWidget(
+                              model: sModel,
+                              context: context,
+                            );
+                          },
+                          childCount: snapshot.data!.docs.length,
+                        ),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 1,
+                        ),
+                      );
+              }),
         ],
       ),
     );

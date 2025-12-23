@@ -53,7 +53,7 @@ class _CartScreenState extends State<CartScreen> {
             },
             icon: const Icon(Icons.clear_all)),
         title: const Text(
-          "I-Eat",
+          "Fresh Dine",
           style: TextStyle(fontSize: 45, fontFamily: "Signatra"),
         ),
         centerTitle: true,

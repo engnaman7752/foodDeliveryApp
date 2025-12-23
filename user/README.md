@@ -1,4 +1,4 @@
-# I-Eat User App 🍔🍕🍰
+# Fresh Dine - Customer App 🍔🍕🍰
 
 A complete **Flutter Food Delivery Application** where users can browse restaurants, add items to cart, checkout with multiple payment methods, and track orders in real-time.
 

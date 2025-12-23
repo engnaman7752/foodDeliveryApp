@@ -322,7 +322,7 @@ Want to contribute? Follow these steps:
 
 ## 📞 Contact & Support
 
-- **Email**: engnaman7752@gmail.com
+- **Email**: nj260106@gmail.com
 - **GitHub Issues**: [Report Bug](https://github.com/engnaman7752/foodDeliveryApp/issues)
 - **GitHub Discussions**: [Ask Questions](https://github.com/engnaman7752/foodDeliveryApp/discussions)
 

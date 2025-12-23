@@ -265,7 +265,7 @@ This project is licensed under the MIT License - see LICENSE file for details.
 ## 📞 Support
 
 For issues or questions:
-- Email: engnaman7752@gmail.com
+- Email: nj260106@gmail.com
 - GitHub Issues: [Report Bug](https://github.com/engnaman7752/foodDeliveryApp/issues)
 
 ## 🙏 Acknowledgments

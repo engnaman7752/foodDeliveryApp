@@ -373,7 +373,7 @@ This project is licensed under the **MIT License** - see [LICENSE](LICENSE) file
 ---
 
 **Created By**: Naman  
-**Email**: engnaman7752@gmail.com  
+**Email**: nj260106@gmail.com  
 **GitHub**: [engnaman7752](https://github.com/engnaman7752)  
 **Last Updated**: December 22, 2025  
 **Version**: 1.0.0  

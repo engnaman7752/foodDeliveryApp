@@ -87,9 +87,16 @@ class _PlacedOrderScreenState extends State<PlacedOrderScreen> {
   }
 
   void addOrderDetails() {
+    // Calculate commission (10% for company, 90% for seller)
+    double totalAmount = widget.totolAmmount ?? 0;
+    double companyCommission = totalAmount * 0.10; // 10%
+    double sellerAmount = totalAmount * 0.90; // 90%
+
     writeOrderDetailsForUser({
       "addressId": widget.addressID,
       "totolAmmount": widget.totolAmmount,
+      "companyCommission": companyCommission,
+      "sellerAmount": sellerAmount,
       "orderedBy": sharedPreferences!.getString("uid"),
       "productIds": sharedPreferences!.getStringList("userCart"),
       "paymentDetails": widget.paymentMethod ?? "Cash on Delivery",
@@ -104,6 +111,8 @@ class _PlacedOrderScreenState extends State<PlacedOrderScreen> {
     writeOrderDetailsForSeller({
       "addressId": widget.addressID,
       "totolAmmount": widget.totolAmmount,
+      "companyCommission": companyCommission,
+      "sellerAmount": sellerAmount,
       "orderedBy": sharedPreferences!.getString("uid"),
       "productIds": sharedPreferences!.getStringList("userCart"),
       "paymentDetails": widget.paymentMethod ?? "Cash on Delivery",

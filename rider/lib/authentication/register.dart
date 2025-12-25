@@ -59,7 +59,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       Placemark pMarks = placeMarks![0];
       completeAddress =
-      '${pMarks.subThoroughfare} ${pMarks.thoroughfare}, ${pMarks.subLocality} ${pMarks.locality}, ${pMarks.subAdministrativeArea}, ${pMarks.administrativeArea} ${pMarks.postalCode}, ${pMarks.country}';
+          '${pMarks.subThoroughfare} ${pMarks.thoroughfare}, ${pMarks.subLocality} ${pMarks.locality}, ${pMarks.subAdministrativeArea}, ${pMarks.administrativeArea} ${pMarks.postalCode}, ${pMarks.country}';
       locationController.text = completeAddress;
 
       setState(() {});
@@ -116,7 +116,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return;
     }
 
-    // Start uploading
+    // Start registration (upload happens after authentication)
     try {
       showDialog(
           context: context,
@@ -125,18 +125,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               message: "Registering Account...",
             );
           });
-
-      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-      fStorage.Reference reference = fStorage.FirebaseStorage.instance
-          .ref()
-          .child('riders')
-          .child(fileName);
-      fStorage.UploadTask uploadTask =
-      reference.putFile(File(imageXFile!.path));
-
-      fStorage.TaskSnapshot taskSnapshot =
-      await uploadTask.whenComplete(() {});
-      sellerImageUrl = await taskSnapshot.ref.getDownloadURL();
 
       await authenticateSellerAndSignUp();
     } catch (e) {
@@ -161,6 +149,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
       currentUser = auth.user;
 
       if (currentUser != null) {
+        // Upload image AFTER authentication
+        if (imageXFile != null) {
+          try {
+            String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+            fStorage.Reference reference = fStorage.FirebaseStorage.instance
+                .ref()
+                .child('riders')
+                .child(currentUser.uid)
+                .child(fileName);
+            fStorage.UploadTask uploadTask =
+                reference.putFile(File(imageXFile!.path));
+
+            fStorage.TaskSnapshot taskSnapshot =
+                await uploadTask.whenComplete(() {});
+            sellerImageUrl = await taskSnapshot.ref.getDownloadURL();
+          } catch (e) {
+            debugPrint('Image upload error: $e');
+            // Continue without image if upload fails
+            sellerImageUrl = '';
+          }
+        }
+
         await saveDataToFireStore(currentUser);
         Navigator.pop(context); // Close loading dialog
         Navigator.pushReplacement(
@@ -176,18 +186,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
       switch (e.code) {
         case 'email-already-in-use':
           errorMessage =
-          'This email is already registered. Please login instead or use a different email.';
+              'This email is already registered. Please login instead or use a different email.';
           break;
         case 'weak-password':
           errorMessage =
-          'The password is too weak. Please use at least 6 characters.';
+              'The password is too weak. Please use at least 6 characters.';
           break;
         case 'invalid-email':
           errorMessage = 'The email address is invalid.';
           break;
         case 'operation-not-allowed':
           errorMessage =
-          'Email/password accounts are not enabled. Please contact support.';
+              'Email/password accounts are not enabled. Please contact support.';
           break;
         default:
           errorMessage = 'Registration failed: ${e.message}';
@@ -253,10 +263,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     : FileImage(File(imageXFile!.path)),
                 child: imageXFile == null
                     ? Icon(
-                  Icons.add_photo_alternate,
-                  size: MediaQuery.of(context).size.width * 0.20,
-                  color: Colors.grey,
-                )
+                        Icons.add_photo_alternate,
+                        size: MediaQuery.of(context).size.width * 0.20,
+                        color: Colors.grey,
+                      )
                     : null),
           ),
           const SizedBox(height: 10),
@@ -319,7 +329,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     style: ElevatedButton.styleFrom(
                         backgroundColor:
-                        const Color.fromARGB(255, 249, 168, 87),
+                            const Color.fromARGB(255, 249, 168, 87),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         )),
@@ -336,11 +346,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
             style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.redAccent.shade100,
                 padding:
-                const EdgeInsets.symmetric(horizontal: 50, vertical: 20)),
+                    const EdgeInsets.symmetric(horizontal: 50, vertical: 20)),
             child: const Text(
               "Sign Up",
               style:
-              TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ),
           const SizedBox(height: 30)

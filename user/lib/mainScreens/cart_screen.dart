@@ -60,16 +60,12 @@ class _CartScreenState extends State<CartScreen> {
         automaticallyImplyLeading: true,
         actions: [],
       ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          const SizedBox(
-            height: 10,
-          ),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: FloatingActionButton.extended(
-              heroTag: 'btn1',
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ElevatedButton.icon(
               onPressed: () {
                 clearCartNow(context);
                 Navigator.push(
@@ -78,15 +74,14 @@ class _CartScreenState extends State<CartScreen> {
                         builder: (context) => const MySplashScreen()));
                 Fluttertoast.showToast(msg: "cart has been cleared");
               },
-              label: const Text("Clear Cart"),
-              backgroundColor: Colors.redAccent,
               icon: const Icon(Icons.clear_all),
+              label: const Text("Clear Cart"),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.redAccent,
+                foregroundColor: Colors.white,
+              ),
             ),
-          ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: FloatingActionButton.extended(
-              heroTag: 'btn2',
+            ElevatedButton.icon(
               onPressed: () {
                 // Get the total from provider instead of local variable
                 double total = Provider.of<TotalAmmount>(context, listen: false)
@@ -101,12 +96,15 @@ class _CartScreenState extends State<CartScreen> {
                               sellerUID: widget.sellerUID,
                             )));
               },
-              label: const Text("Check Out"),
-              backgroundColor: Colors.redAccent,
               icon: const Icon(Icons.navigate_next),
+              label: const Text("Check Out"),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       body: CustomScrollView(
         slivers: [
@@ -213,22 +211,113 @@ class _CartScreenState extends State<CartScreen> {
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Card(
-                child: ListTile(
-                  title: Text(
-                      itemsData[index]['title'] ?? "Item ${itemIds[index]}"),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                child: SizedBox(
+                  height: 120,
+                  child: Row(
                     children: [
-                      Text("ID: ${itemIds[index]}"),
-                      Text(
-                          "Quantity: ${quantities[index]} × ₹${itemPrice.toStringAsFixed(2)} = ₹${itemTotal.toStringAsFixed(2)}"),
+                      // Fixed size image container
+                      Container(
+                        width: 100,
+                        height: 120,
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(4),
+                            bottomLeft: Radius.circular(4),
+                          ),
+                          color: Colors.grey[300],
+                        ),
+                        child: itemsData[index]['imageUrl'] != null
+                            ? Image.network(
+                                itemsData[index]['imageUrl'] as String,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Center(
+                                    child: Icon(Icons.image_not_supported,
+                                        color: Colors.grey),
+                                  );
+                                },
+                              )
+                            : const Center(
+                                child: Icon(Icons.image,
+                                    color: Colors.grey, size: 40),
+                              ),
+                      ),
+                      // Product details
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: Text(
+                                      itemsData[index]['title'] ??
+                                          "Item ${itemIds[index]}",
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    "Qty: ${quantities[index]}",
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "₹${itemPrice.toStringAsFixed(2)}",
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      Text(
+                                        "Total: ₹${itemTotal.toStringAsFixed(2)}",
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.delete,
+                                        color: Colors.red, size: 20),
+                                    onPressed: () {
+                                      removeItemFromCart(
+                                          itemIds[index], context);
+                                    },
+                                    constraints: const BoxConstraints(),
+                                    padding: EdgeInsets.zero,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
-                  ),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.red),
-                    onPressed: () {
-                      removeItemFromCart(itemIds[index], context);
-                    },
                   ),
                 ),
               ),
@@ -277,6 +366,7 @@ class _CartScreenState extends State<CartScreen> {
                 'itemId': itemId,
                 'title': item.get('title') ?? 'Item',
                 'price': item.get('price') ?? 0,
+                'imageUrl': item.get('imageUrl'),
               });
             }
           }

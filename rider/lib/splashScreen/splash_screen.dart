@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rider_app/authentication/auth_screen.dart';
+import 'package:rider_app/mainScreens/home_screen.dart';
+import 'package:rider_app/global/global.dart';
 
 class MySplashScreen extends StatefulWidget {
   const MySplashScreen({super.key});
@@ -11,12 +14,25 @@ class MySplashScreen extends StatefulWidget {
 
 class _MySplashScreenState extends State<MySplashScreen> {
   startTimer() {
-    Timer(const Duration(seconds: 2), () {
-      print("Timer complete, navigating to AuthScreen");
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const AuthScreen()),
-      );
+    Timer(const Duration(seconds: 2), () async {
+      // Check if user is already logged in
+      User? currentUser = firebaseAuth.currentUser;
+
+      if (currentUser != null &&
+          sharedPreferences != null &&
+          sharedPreferences!.getString("uid") != null) {
+        print("User already logged in: ${currentUser.uid}");
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
+      } else {
+        print("No user logged in, going to AuthScreen");
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const AuthScreen()),
+        );
+      }
     });
   }
 

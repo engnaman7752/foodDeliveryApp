@@ -27,6 +27,7 @@ class _NewOrdersScreenState extends State<NewOrdersScreen> {
               .collection("orders")
               .where("status", isEqualTo: "normal")
               .orderBy("orderTime", descending: true)
+              .limit(50)
               .snapshots(),
           builder: (c, snapshot) {
             return snapshot.hasData
@@ -40,9 +41,6 @@ class _NewOrdersScreenState extends State<NewOrdersScreen> {
                                 whereIn: separateOrderItemIds(
                                     (snapshot.data?.docs[index].data()
                                         as Map<String, dynamic>)["productIds"]))
-                            .where("orderedBy",
-                                whereIn: (snapshot.data?.docs[index].data()
-                                    as Map<String, dynamic>)["uid"])
                             .orderBy("publishedDate", descending: true)
                             .get(),
                         builder: (c, snap) {

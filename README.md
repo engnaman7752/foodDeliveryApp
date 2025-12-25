@@ -38,10 +38,27 @@ foodDeliveryApp/
 │   ├── package.json
 │   └── README.md
 │
-└── rider/                # 🚴 Rider Mobile App [In Progress]
-    ├── lib/
-    ├── pubspec.yaml
-    └── README.md
+├── rider/                # 🚴 Rider Mobile App
+│   ├── lib/
+│   ├── pubspec.yaml
+│   └── README.md
+│
+├── admin/                # 👨‍💼 Admin Portal - NEW!
+│   ├── lib/
+│   │   ├── authentication/       # Admin login
+│   │   ├── screens/              # Dashboard, Orders, Sellers, Commission
+│   │   ├── models/               # Order, Seller, Commission models
+│   │   ├── widgets/              # UI components
+│   │   ├── global/               # Global config
+│   │   └── main.dart
+│   ├── pubspec.yaml
+│   ├── analysis_options.yaml
+│   └── README.md
+│
+├── ADMIN_SETUP_GUIDE.md          # Quick setup for admin app
+├── ADMIN_INTEGRATION_GUIDE.md    # Detailed integration guide
+├── CODE_IMPLEMENTATION_EXAMPLES.md # Code snippets for all apps
+└── README.md                      # Main project documentation
 ```
 
 ## 🚀 Apps & Modules
@@ -81,24 +98,45 @@ Sellers can add menu items, manage inventory, and fulfill orders.
 
 **Planned Features**:
 - ✅ Add/edit menu items
+- ✅ Inventory management
+- ✅ Order fulfillment
 - ✅ Manage inventory & prices
 - ✅ View incoming orders
 - ✅ Order fulfillment tracking
 - ✅ Earnings dashboard
 - ✅ Performance analytics
 
-### 3️⃣ Admin Dashboard 🔄 (In Development)
-**Status**: In Progress
+### 3️⃣ Admin Portal ✅ (NEW - Complete)
+**Status**: Ready for Setup & Testing
 
-Admins manage the platform with comprehensive controls.
+Complete admin management dashboard for the food delivery platform.
 
-**Planned Features**:
-- ✅ Seller verification & management
-- ✅ User management
-- ✅ Order monitoring
-- ✅ Revenue analytics
-- ✅ Support tickets
-- ✅ Platform settings
+**Features**:
+- ✅ Real-time dashboard with key metrics
+- ✅ Orders management (view, filter, update status)
+- ✅ Sellers management (approve, manage, view stats)
+- ✅ Commission tracking (10% company, 90% seller)
+- ✅ Cash on Delivery (COD) handling
+- ✅ Payment method filtering (Card, COD)
+- ✅ Real-time statistics & reports
+- ✅ Admin authentication & security
+
+**Commission System**:
+- **Company Commission**: 10% of each order
+- **Seller Earnings**: 90% of each order
+- **Automatic Calculation**: System calculates commissions at order placement
+- **COD Support**: Track cash collection separately
+
+**Quick Start**:
+```bash
+cd admin
+flutter pub get
+flutter run
+```
+
+👉 [Admin Setup Guide](./ADMIN_SETUP_GUIDE.md)
+👉 [Admin Integration Guide](./ADMIN_INTEGRATION_GUIDE.md)
+👉 [Admin App README](./admin/README.md)
 
 ### 4️⃣ Rider App 🔄 (In Development)
 **Status**: In Progress
@@ -316,9 +354,25 @@ Want to contribute? Follow these steps:
 
 - [User App Guide](./user/README.md)
 - [Seller App Guide](./seller/README.md) - Coming Soon
-- [Admin Dashboard Guide](./admin/README.md) - Coming Soon
+- **[Admin Portal Guide](./admin/README.md) - NEW! ✨**
+- **[Admin Setup Guide](./ADMIN_SETUP_GUIDE.md) - Step-by-step setup**
+- **[Admin Integration Guide](./ADMIN_INTEGRATION_GUIDE.md) - Detailed integration**
+- **[Code Implementation Examples](./CODE_IMPLEMENTATION_EXAMPLES.md) - Code snippets**
 - [Rider App Guide](./rider/README.md) - Coming Soon
 - [API Documentation](./API.md) - Coming Soon
+
+## 🎯 Admin Portal - NEW!
+
+A complete admin dashboard for managing the food delivery platform with:
+
+- **Commission Management**: Automatic 10% company commission calculation
+- **Orders Dashboard**: Real-time order tracking and status management
+- **Seller Management**: Approve sellers, manage profiles, track earnings
+- **Cash on Delivery**: Track COD orders and cash collection
+- **Real-time Reports**: Commission reports and statistics
+- **Analytics**: Key metrics and performance tracking
+
+📋 **To get started**: See [ADMIN_SETUP_GUIDE.md](./ADMIN_SETUP_GUIDE.md)
 
 ## 📞 Contact & Support
 

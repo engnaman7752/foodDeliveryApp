@@ -29,47 +29,62 @@ class _HistoryScreenState extends State<HistoryScreen> {
               .where("sellerUID",
                   isEqualTo: sharedPreferences!.getString("uid"))
               .where("status", isEqualTo: "ended")
-              .orderBy("orderTime", descending: true)
               .snapshots(),
           builder: (c, snapshot) {
-            return snapshot.hasData
-                ? ListView.builder(
-                    itemCount: snapshot.data?.docs.length,
-                    itemBuilder: (c, index) {
-                      return FutureBuilder<QuerySnapshot>(
-                        future: FirebaseFirestore.instance
-                            .collection("items")
-                            .where("itemId",
-                                whereIn: separateOrderItemIds(
-                                    (snapshot.data?.docs[index].data()
-                                        as Map<String, dynamic>)["productIds"]))
-                            .where("sellerUID",
-                                whereIn: (snapshot.data?.docs[index].data()
-                                    as Map<String, dynamic>)["uid"])
-                            .orderBy("publishedDate", descending: true)
-                            .get(),
-                        builder: (c, snap) {
-                          return snap.hasData
-                              ? OrderCard(
-                                  itemCount: snap.data?.docs.length,
-                                  data: snap.data?.docs,
-                                  orderId: snapshot.data?.docs[index].id,
-                                  seperateQuantitiesList:
-                                      separateOrderItemQuantities(
-                                          (snapshot.data?.docs[index].data()
-                                                  as Map<String, dynamic>)[
-                                              "productIds"]),
-                                )
-                              : Center(
-                                  child: circularProgress(),
-                                );
-                        },
-                      );
-                    },
-                  )
-                : Center(
-                    child: circularProgress(),
-                  );
+            if (snapshot.hasData) {
+              final allDocs = snapshot.data!.docs;
+
+              // Sort locally by orderTime
+              allDocs.sort((a, b) {
+                final timeA =
+                    (a.data() as Map<String, dynamic>)['orderTime'] ?? '';
+                final timeB =
+                    (b.data() as Map<String, dynamic>)['orderTime'] ?? '';
+                return timeB.compareTo(timeA);
+              });
+
+              return allDocs.isEmpty
+                  ? Center(child: Text("No Order History Found"))
+                  : ListView.builder(
+                      itemCount: allDocs.length,
+                      itemBuilder: (c, index) {
+                        final orderData =
+                            allDocs[index].data() as Map<String, dynamic>;
+                        final productIds = orderData["productIds"] as List?;
+
+                        if (productIds == null || productIds.isEmpty) {
+                          return ListTile(
+                            title: Text("Invalid Order"),
+                          );
+                        }
+
+                        return FutureBuilder<QuerySnapshot>(
+                          future: FirebaseFirestore.instance
+                              .collection("items")
+                              .where("itemId",
+                                  whereIn: separateOrderItemIds(productIds))
+                              .get(),
+                          builder: (c, snap) {
+                            return snap.hasData
+                                ? OrderCard(
+                                    itemCount: snap.data?.docs.length,
+                                    data: snap.data?.docs,
+                                    orderId: allDocs[index].id,
+                                    seperateQuantitiesList:
+                                        separateOrderItemQuantities(productIds),
+                                  )
+                                : Center(
+                                    child: circularProgress(),
+                                  );
+                          },
+                        );
+                      },
+                    );
+            } else {
+              return Center(
+                child: circularProgress(),
+              );
+            }
           },
         ),
       ),

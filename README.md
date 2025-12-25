@@ -33,31 +33,26 @@ foodDeliveryApp/
 │   ├── pubspec.yaml
 │   └── README.md
 │
-├── admin/                # 👨‍💼 Admin Web Dashboard [In Progress]
-│   ├── src/
-│   ├── package.json
-│   └── README.md
-│
 ├── rider/                # 🚴 Rider Mobile App
 │   ├── lib/
 │   ├── pubspec.yaml
 │   └── README.md
 │
-├── admin/                # 👨‍💼 Admin Portal - NEW!
+├── admin/                # 👨‍💼 Admin Portal - Complete!
 │   ├── lib/
 │   │   ├── authentication/       # Admin login
 │   │   ├── screens/              # Dashboard, Orders, Sellers, Commission
 │   │   ├── models/               # Order, Seller, Commission models
-│   │   ├── widgets/              # UI components
+│   │   ├── services/             # Authentication service
 │   │   ├── global/               # Global config
 │   │   └── main.dart
+│   ├── android/                  # Android configuration
+│   ├── ios/                      # iOS configuration
+│   ├── web/                      # Web configuration
 │   ├── pubspec.yaml
 │   ├── analysis_options.yaml
 │   └── README.md
 │
-├── ADMIN_SETUP_GUIDE.md          # Quick setup for admin app
-├── ADMIN_INTEGRATION_GUIDE.md    # Detailed integration guide
-├── CODE_IMPLEMENTATION_EXAMPLES.md # Code snippets for all apps
 └── README.md                      # Main project documentation
 ```
 
@@ -134,8 +129,6 @@ flutter pub get
 flutter run
 ```
 
-👉 [Admin Setup Guide](./ADMIN_SETUP_GUIDE.md)
-👉 [Admin Integration Guide](./ADMIN_INTEGRATION_GUIDE.md)
 👉 [Admin App README](./admin/README.md)
 
 ### 4️⃣ Rider App 🔄 (In Development)
